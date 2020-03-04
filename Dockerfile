@@ -13,3 +13,5 @@ WORKDIR /home/root
 
 RUN pip3 install --upgrade pip==20.0.2
 RUN pip3 install -r requirements.txt
+
+ENTRYPOINT [ "python3", "main.py" ]
