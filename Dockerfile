@@ -9,6 +9,7 @@ RUN apk add --update \
     && rm -rf /var/cache/apk/*
 
 COPY ./src /home/root
+COPY requirements.txt /home/root
 WORKDIR /home/root
 RUN ls
 
