@@ -5,12 +5,11 @@
 ## About
 This is course work for Method Optimization subject.
 
-
 ## Running project
-1. Open terminal
-2. Run next commands
+1.  Open terminal
+2.  Run next commands
 
 ```bash
-docker -t build gradient-descent .
+docker build -t gradient-descent .
 docker run --rm gradient-descent
 ```

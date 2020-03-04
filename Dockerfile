@@ -8,8 +8,9 @@ RUN apk add --update \
     build-base \
     && rm -rf /var/cache/apk/*
 
-COPY . /home/root
+COPY ./src /home/root
 WORKDIR /home/root
+RUN ls
 
 RUN pip3 install --upgrade pip==20.0.2
 RUN pip3 install -r requirements.txt
