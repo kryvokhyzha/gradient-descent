@@ -1,20 +1,6 @@
 import streamlit as st
-
-
-def general_page():
-    pass
-
-
-def gd_solution_page():
-    pass
-
-
-def user_history_page():
-    pass
-
-
-def about_us_page():
-    pass
+from pages import (general_page, gd_solution_page,
+                   user_history_page, about_us_page)
 
 
 if __name__ == '__main__':
