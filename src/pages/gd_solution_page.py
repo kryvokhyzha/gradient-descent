@@ -3,44 +3,7 @@ import pandas as pd
 import os
 from collections import namedtuple
 
-from gradient_descents import classic_grad_descent
-from hypotheses import Linear
-from cost_functions import MSE
-
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-
-
-MODIFICATIONS = {
-    'Classic GD': classic_grad_descent,
-    'SGD': classic_grad_descent,
-    'SGD with Momentum': classic_grad_descent,
-    'RMSProp': classic_grad_descent,
-    'Adam': classic_grad_descent
-}
-
-
-HYPOTHESES = {
-    'Linear': Linear,
-    'Square': Linear
-}
-
-
-COST_FUNCTIONS = {
-    'MSE': MSE,
-    'MAE': MSE
-}
-
-REGULARIZATION = {
-    'None': None,
-    'L1': 'L1',
-    'L2': 'L2'
-}
-
-SCALE = {
-    'None': None,
-    'StandartScaler': StandardScaler(),
-    'MinMaxScaler': MinMaxScaler()
-}
+from utils.constants import *
 
 
 def show_side_bar():
@@ -119,7 +82,9 @@ def gd_solution_page():
 
     if st.button('Solve', key='solve_btn'):
         st.write(h.weight)
-        classic_grad_descent(h, properties.max_num_itter, properties.cost_function,
-                             regularization=properties.regularization, C=properties.reg_coef,
-                             alpha=properties.alpha, eps=properties.eps)
+        with st.spinner('waiting...'):
+            classic_grad_descent(h, properties.max_num_itter, properties.cost_function,
+                                regularization=properties.regularization, C=properties.reg_coef,
+                                alpha=properties.alpha, eps=properties.eps)
+            st.success('Finished!')
         st.write(h.weight)
