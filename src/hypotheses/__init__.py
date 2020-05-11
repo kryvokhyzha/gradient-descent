@@ -1,2 +1,3 @@
 from hypotheses.abstract_hypothesis import Abstract_Hypothesis
 from hypotheses.linear_hypothesis import Linear
+from hypotheses.square_hypothesis import Square
