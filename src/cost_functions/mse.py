@@ -7,9 +7,9 @@ class MSE:
         """
         h_grad - gradient of hypothesis function
         """
-        return 2 * (y_pred - y).T @ h_grad / len(y_pred)
+        return h_grad.T.dot(y_pred - y) / (len(y))
 
     @staticmethod
     def mean_squared_error(y_pred, y):
-        return np.square(y_pred - y).mean() 
+        return np.sum(np.square(y_pred - y)) / (2*len(y))
         
