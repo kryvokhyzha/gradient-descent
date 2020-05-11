@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import os
+
 from collections import namedtuple
+from sklearn.datasets import make_regression
 
 from utils.constants import *
 
@@ -54,8 +56,33 @@ def select_task_type():
     return task_type
 
 
-def generate_task(h_type, scaler):
-    pass
+def params_for_generate_regression():
+    st.header('Please, select parameters for generation dataset')
+
+    n_samples = int(st.number_input('The number of samples', key='n_samples', min_value=1, value=100, step=1))
+
+    n_features = int(st.number_input('The number of features', key='n_features', min_value=1, value=1, step=1))
+
+    n_informative = int(st.number_input('The number of informative features', key='n_informative', min_value=1, value=1, step=1))
+
+    noise = float(st.number_input('The standard deviation of the gaussian noise applied to the output',
+                                          key='noise', min_value=0.0, value=10.0, step=0.1))
+
+    return {
+        'n_samples': n_samples,
+        'n_features': n_features,
+        'n_informative': n_informative,
+        'noise': noise
+    }
+
+
+def generate_task(h_type, scaler, **kwargs):
+    X, y = make_regression(**kwargs)
+    if scaler is not None:
+        X = scaler.fit_transform(X)
+
+    y = y.reshape((len(y), 1))
+    return h_type(X, y)
 
 
 def individual_task(h_type, scaler):
@@ -68,23 +95,26 @@ def individual_task(h_type, scaler):
     return h_type(X, y)
 
 
+def solve_btn(h, properties):
+    if st.button('Solve', key='solve_btn'):
+        st.write(h.weight)
+        with st.spinner('waiting...'):
+            properties.modification(h, properties.max_num_itter, properties.cost_function,
+                                    regularization=properties.regularization, C=properties.reg_coef,
+                                    alpha=properties.alpha, eps=properties.eps)
+            st.success('Finished!')
+        st.write(h.weight)
+
+
 def gd_solution_page():
     st.title('Gradient Descent')
     properties = show_side_bar()
     task_type = select_task_type()
 
-    st.write([properties])
-
     if task_type == 'Individual':
         h = individual_task(properties.hypothesis, properties.scaler)
     elif task_type == 'Generate task':
-        generate_task(properties.hypothesis, properties.scaler)
-
-    if st.button('Solve', key='solve_btn'):
-        st.write(h.weight)
-        with st.spinner('waiting...'):
-            classic_grad_descent(h, properties.max_num_itter, properties.cost_function,
-                                regularization=properties.regularization, C=properties.reg_coef,
-                                alpha=properties.alpha, eps=properties.eps)
-            st.success('Finished!')
-        st.write(h.weight)
+        kwargs = params_for_generate_regression()
+        h = generate_task(properties.hypothesis, properties.scaler, **kwargs)
+    
+    solve_btn(h, properties)
