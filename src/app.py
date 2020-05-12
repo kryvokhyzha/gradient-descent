@@ -1,9 +1,11 @@
 import streamlit as st
 from pages import (general_page, gd_solution_page,
                    user_history_page, about_us_page)
+from db import db_creation, db_clean
 
 
 if __name__ == '__main__':
+    db_creation()
     options = {'General': general_page,
                'Gradient Descent Solution': gd_solution_page,
                'User History': user_history_page,
@@ -12,5 +14,5 @@ if __name__ == '__main__':
 
     st.sidebar.header("Please, choose page")
     page = st.sidebar.radio('', key='page_choice_radio', options=list(options.keys()))
-
+    
     options[page]()
