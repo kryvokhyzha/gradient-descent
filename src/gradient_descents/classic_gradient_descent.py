@@ -7,15 +7,12 @@ def classic_grad_descent(hypothes, max_num_itter, cost_function, regularization=
     if regularization is None:
         penalty = lambda x: (x * 0).sum()
         grad_penalty = lambda x: x * 0
-        print('None')
     elif regularization == 'L1':
         penalty = lambda x: C*np.abs(x)[:, 1:].sum() / len(hypothes.y)
         grad_penalty = lambda x: C*((x > 0) + (x < 0) * (-1))
-        print('L1')
     elif regularization == 'L2':
         penalty = lambda x: C * np.square(x)[:, 1:].sum() / (len(hypothes.y)*2)
         grad_penalty = lambda x: C * x / len(hypothes.y)
-        print('L2')
 
     I = np.eye(hypothes.X.shape[1])
     I[0, :] = 0
