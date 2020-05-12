@@ -9,7 +9,6 @@ object UserHistory{
   execution_time: time 
   ins_date: datetime
   - param_id: int
-  - result_id: int
 }
 
 object AlgorithmParams{
@@ -22,15 +21,9 @@ object AlgorithmParams{
     learning_rate: double
     eps: double
     max_num_itter: bigint
-}
-
-object Result{
-    ~id: int
     weights: varchar
 }
 
-
 UserHistory -down-> AlgorithmParams
-UserHistory -down-> Result
 
 @enduml
