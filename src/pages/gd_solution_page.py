@@ -6,6 +6,7 @@ from collections import namedtuple
 from sklearn.datasets import make_regression, make_classification
 
 from utils.constants import *
+from plot import cost_function_plot_2d
 
 
 def show_side_bar():
@@ -131,12 +132,13 @@ def solve_btn(h, properties):
     if st.button('Solve', key='solve_btn'):
         st.write(h.weight)
         with st.spinner('waiting...'):
-            properties.modification(h, properties.max_num_itter, properties.cost_function,
-                                    regularization=properties.regularization, C=properties.reg_coef,
-                                    alpha=properties.alpha, eps=properties.eps)
+            loss_history, weights_history = properties.modification(h, properties.max_num_itter, properties.cost_function,
+                                                                    regularization=properties.regularization, C=properties.reg_coef,
+                                                                    alpha=properties.alpha, eps=properties.eps)
             st.success('Finished!')
         st.write(h.weight)
-
+        cost_function_plot_2d(h, properties, loss_history, weights_history)
+        
 
 def gd_solution_page():
     st.title('Gradient Descent')
