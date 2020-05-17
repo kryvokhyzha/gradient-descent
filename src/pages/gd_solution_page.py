@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import os
+
 from collections import namedtuple
+from sklearn.datasets import make_regression, make_classification
 
 from utils.constants import *
 
@@ -49,13 +51,70 @@ def show_side_bar():
 
 def select_task_type():
     st.header('Please, select type task')
-    task_type = st.selectbox('', key='type_slbox', options=['Individual', 'Generate task'])
+    task_type = st.selectbox('', key='type_slbox', options=['Individual', 'Generate regression task', 'Generate classification task'])
 
     return task_type
 
 
-def generate_task(h_type, scaler):
-    pass
+def params_for_generate_regression():
+    st.header('Please, select parameters for dataset generation')
+
+    n_samples = int(st.number_input('The number of samples', key='n_samples_r', min_value=1, value=100, step=1))
+
+    n_features = int(st.number_input('The number of features', key='n_features_r', min_value=1, value=1, step=1))
+
+    n_informative = int(st.number_input('The number of informative features', key='n_informative_r', min_value=1, value=1, step=1))
+
+    noise = float(st.number_input('The standard deviation of the gaussian noise applied to the output',
+                                          key='noise_r', min_value=0.0, value=10.0, step=0.1))
+
+    return {
+        'n_samples': n_samples,
+        'n_features': n_features,
+        'n_informative': n_informative,
+        'noise': noise
+    }
+
+
+def params_for_generate_classification():
+    st.header('Please, select parameters for dataset generation')
+
+    n_samples = int(st.number_input('The number of samples', key='n_samples_c', min_value=1, value=100, step=1))
+
+    n_features = int(st.number_input('The number of features', key='n_features_c', min_value=1, value=1, step=1))
+
+    n_redundant_title = 'The number of redundant features. These features are generated as random linear combinations of the informative features'
+    n_redundant = int(st.number_input(n_redundant_title, key='n_redundant_c', min_value=0, value=0, step=1))
+
+    n_informative = int(st.number_input('The number of informative features', key='n_informative_c', min_value=1, value=1, step=1))
+
+    n_clusters_per_class = int(st.number_input('The number of clusters per class.', key='n_clusters_per_class_c', min_value=1, value=1, step=1))
+
+    return {
+        'n_samples': n_samples,
+        'n_features': n_features,
+        'n_redundant': n_redundant,
+        'n_informative': n_informative,
+        'n_clusters_per_class': n_clusters_per_class
+    }
+
+
+def generate_regression_task(h_type, scaler, **kwargs):
+    X, y = make_regression(**kwargs)
+    if scaler is not None:
+        X = scaler.fit_transform(X)
+
+    y = y.reshape((len(y), 1))
+    return h_type(X, y)
+
+
+def generate_clasiffication_task(h_type, scaler, **kwargs):
+    X, y = make_classification(**kwargs)
+    if scaler is not None:
+        X = scaler.fit_transform(X)
+
+    y = y.reshape((len(y), 1))
+    return h_type(X, y)
 
 
 def individual_task(h_type, scaler):
@@ -68,23 +127,29 @@ def individual_task(h_type, scaler):
     return h_type(X, y)
 
 
+def solve_btn(h, properties):
+    if st.button('Solve', key='solve_btn'):
+        st.write(h.weight)
+        with st.spinner('waiting...'):
+            properties.modification(h, properties.max_num_itter, properties.cost_function,
+                                    regularization=properties.regularization, C=properties.reg_coef,
+                                    alpha=properties.alpha, eps=properties.eps)
+            st.success('Finished!')
+        st.write(h.weight)
+
+
 def gd_solution_page():
     st.title('Gradient Descent')
     properties = show_side_bar()
     task_type = select_task_type()
 
-    st.write([properties])
-
     if task_type == 'Individual':
         h = individual_task(properties.hypothesis, properties.scaler)
-    elif task_type == 'Generate task':
-        generate_task(properties.hypothesis, properties.scaler)
-
-    if st.button('Solve', key='solve_btn'):
-        st.write(h.weight)
-        with st.spinner('waiting...'):
-            classic_grad_descent(h, properties.max_num_itter, properties.cost_function,
-                                regularization=properties.regularization, C=properties.reg_coef,
-                                alpha=properties.alpha, eps=properties.eps)
-            st.success('Finished!')
-        st.write(h.weight)
+    elif task_type == 'Generate regression task':
+        kwargs = params_for_generate_regression()
+        h = generate_regression_task(properties.hypothesis, properties.scaler, **kwargs)
+    elif task_type == 'Generate classification task':
+        kwargs = params_for_generate_classification()
+        h = generate_clasiffication_task(properties.hypothesis, properties.scaler, **kwargs)
+    
+    solve_btn(h, properties)
