@@ -24,18 +24,25 @@ def classic_grad_descent(hypothes, max_num_itter, cost_function, regularization=
     q2 = np.linalg.pinv(hypothes.X.T @ hypothes.X + C*I)
     st.write(q2 @ q1)
 
+    weights_history = [hypothes.weight]
+    loss_history = []
+
     for i in range(max_num_itter):
         y_pred = hypothes.hypothesis()
-        h_grad = hypothes.hypothesis_grad()
         weight_prev = hypothes.weight.copy()
 
         loss = cost_function.mean_squared_error(y_pred, hypothes.y) + penalty(hypothes.weight)
+        loss_history.append(loss)
 
         gp_value = grad_penalty(hypothes.weight)
         gp_value[0, :] = 0
         
         hypothes.weight -= alpha * (cost_function.mean_squared_error_grad(y_pred, hypothes.y, hypothes.hypothesis_grad()) + gp_value)
 
+        weights_history.append(hypothes.weight)
+
         if (np.abs(weight_prev - hypothes.weight).sum()) < eps:
             print('EPS!')
             break
+
+    return loss_history, weights_history
