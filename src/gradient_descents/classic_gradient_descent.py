@@ -22,11 +22,14 @@ def classic_grad_descent(hypothes, max_num_itter, cost_function, regularization=
     st.write(q2 @ q1)
 
     weights_history = [hypothes.weight]
+    y_pred_history = []
     loss_history = []
 
     for _ in range(max_num_itter):
         y_pred = hypothes.hypothesis()
         weight_prev = hypothes.weight.copy()
+
+        y_pred_history.append(y_pred.copy())
 
         loss = cost_function.get_loss(y_pred, hypothes.y) + penalty(hypothes.weight)
         loss_history.append(loss)
@@ -42,4 +45,4 @@ def classic_grad_descent(hypothes, max_num_itter, cost_function, regularization=
             print('EPS!')
             break
 
-    return loss_history, np.array(weights_history)
+    return loss_history, np.array(weights_history), np.array(y_pred_history)

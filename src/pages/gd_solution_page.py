@@ -7,9 +7,11 @@ import time
 from collections import namedtuple
 from sklearn.datasets import make_regression, make_classification
 
+import matplotlib.pyplot as plt
+
 from utils.constants import *
-from db.db import *
-from plot import cost_function_plot_2d
+from db import db_insert
+from plot import cost_function_plot_2d, loss_plot_2d, data_plot_2d
 
 
 
@@ -142,9 +144,9 @@ def solve_btn(h, properties, choice):
         start_time = time.time()
         st.write(h.weight)
         with st.spinner('waiting...'):
-            loss_history, weights_history = properties.modification(h, properties.max_num_itter, properties.cost_function,
-                                                                    regularization=properties.regularization, C=properties.reg_coef,
-                                                                    alpha=properties.alpha, eps=properties.eps)
+            loss_history, weights_history, y_pred_history = properties.modification(h, properties.max_num_itter, properties.cost_function,
+                                                                                    regularization=properties.regularization, C=properties.reg_coef,
+                                                                                    alpha=properties.alpha, eps=properties.eps)
             st.success('Finished!')
 
         if np.isnan(h.weight).any():
@@ -153,8 +155,10 @@ def solve_btn(h, properties, choice):
             st.write(h.weight)
         
         db_insert(h, properties, time.time() - start_time, choice)
-        
-        cost_function_plot_2d(h, properties, loss_history, weights_history)
+
+        cost_function_plot_2d(h, properties, weights_history)
+        loss_plot_2d(loss_history)
+        data_plot_2d(h, y_pred_history)
         
 
 
