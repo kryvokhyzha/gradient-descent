@@ -1,1 +1,1 @@
-from plot.cost_function_plot import cost_function_plot_2d
+from plot.plots_2d import cost_function_plot_2d, loss_plot_2d, data_plot_2d

@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from db.db import *
+from db import db_clean, db_select
 
 
 def user_history_page():

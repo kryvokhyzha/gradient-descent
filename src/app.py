@@ -1,7 +1,7 @@
 import streamlit as st
 from pages import (general_page, gd_solution_page,
                    user_history_page, about_us_page)
-from db import db_creation, db_clean
+from db import db_creation
 
 
 if __name__ == '__main__':

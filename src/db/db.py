@@ -1,6 +1,7 @@
 import sqlite3 as sql 
 import datetime as dt
 
+
 def db_creation():
     conn = sql.connect('db/user_history.db')
     cur = conn.cursor()
