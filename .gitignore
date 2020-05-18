@@ -115,3 +115,5 @@ db.txt
 .local
 .config
 .bash_history
+
+*.db

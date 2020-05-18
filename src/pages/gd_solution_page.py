@@ -1,11 +1,16 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import os
+import time
 
 from collections import namedtuple
 from sklearn.datasets import make_regression, make_classification
 
 from utils.constants import *
+from db.db import *
+from plot import cost_function_plot_2d
+
 
 
 def show_side_bar():
@@ -42,11 +47,16 @@ def show_side_bar():
 
     Properties = namedtuple('Properties', ['modification', 'hypothesis', 'cost_function',
                             'scaler', 'regularization', 'reg_coef', 'alpha', 'eps', 'max_num_itter'])
+    
+    Choice = namedtuple('Choice', ['modification', 'hypothesis', 'cost_function',
+                            'scaler', 'regularization'])
 
     return Properties(modification=MODIFICATIONS[modification], hypothesis=HYPOTHESES[hypothesis],
                       cost_function=COST_FUNCTIONS[cost_function], scaler=SCALE[scaler],
                       regularization=REGULARIZATION[regularization], reg_coef=reg_coef,
-                      eps=eps, alpha=alpha, max_num_itter=max_num_itter)
+                      eps=eps, alpha=alpha, max_num_itter=max_num_itter), Choice(modification=modification,
+                       hypothesis=hypothesis, cost_function=cost_function, scaler=scaler, regularization = regularization)
+            
 
 
 def select_task_type():
@@ -127,22 +137,32 @@ def individual_task(h_type, scaler):
     return h_type(X, y)
 
 
-def solve_btn(h, properties):
+def solve_btn(h, properties, choice):
     if st.button('Solve', key='solve_btn'):
+        start_time = time.time()
         st.write(h.weight)
         with st.spinner('waiting...'):
-            properties.modification(h, properties.max_num_itter, properties.cost_function,
-                                    regularization=properties.regularization, C=properties.reg_coef,
-                                    alpha=properties.alpha, eps=properties.eps)
+            loss_history, weights_history = properties.modification(h, properties.max_num_itter, properties.cost_function,
+                                                                    regularization=properties.regularization, C=properties.reg_coef,
+                                                                    alpha=properties.alpha, eps=properties.eps)
             st.success('Finished!')
-        st.write(h.weight)
+
+        if np.isnan(h.weight).any():
+            st.error("Result approximates to infinity. Please, select another parameters.")
+        else:
+            st.write(h.weight)
+        
+        db_insert(h, properties, time.time() - start_time, choice)
+        
+        cost_function_plot_2d(h, properties, loss_history, weights_history)
+        
 
 
 def gd_solution_page():
     st.title('Gradient Descent')
-    properties = show_side_bar()
+    properties, choice = show_side_bar()
     task_type = select_task_type()
-
+    
     if task_type == 'Individual':
         h = individual_task(properties.hypothesis, properties.scaler)
     elif task_type == 'Generate regression task':
@@ -152,4 +172,5 @@ def gd_solution_page():
         kwargs = params_for_generate_classification()
         h = generate_clasiffication_task(properties.hypothesis, properties.scaler, **kwargs)
     
-    solve_btn(h, properties)
+    solve_btn(h, properties, choice)
+
