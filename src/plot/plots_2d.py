@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 import streamlit as st
 
 
@@ -60,47 +61,79 @@ def cost_function_plot_2d(h, properties, weights_history, ax=None, fig=None):
     
     ax.set_xlabel(r'$w_0$')
     ax.set_ylabel(r'$w_1$')
-    ax.set_title('Cost function')
+    ax.set_title('Cost function contour plot')
     ax.legend()
 
     plt.show()
     st.pyplot()
 
+#    data = go.Contour(
+#        z=J_grid,
+#        contours=dict(
+#            coloring='lines',
+#            showlabels=True, # show labels on contours
+#            labelfont=dict( # label font properties
+#                size=12,
+#                color='black',
+#            ))
+#    )
+    
+#    fig = go.Figure(data=data)
+#    st.plotly_chart(fig)
 
-def loss_plot_2d(loss_history, ax=None, fig=None):
-    if ax is None or fig is None:
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,6.15))
-    ax.plot(loss_history, 'b', label='cost function value for each iteration')
-    ax.set_xlabel(r'num_iter')
-    ax.set_ylabel(r'J(w)')
-    ax.set_title('Cost function')
-    ax.legend()
-    plt.show()
-    st.pyplot()
+
+def loss_plot_2d(loss_history):
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=list(range(1, len(loss_history)+1)), y=loss_history,
+                    opacity=1,
+                    line=dict(color='firebrick', width=1),
+                    mode='lines+markers'))
+
+    fig.update_layout(title='Cost function value for each iteration', autosize=False,
+                      width=800,
+                      height=600,
+                      xaxis_title='num_iter',
+                      yaxis_title='J(w)')
+    st.plotly_chart(fig)
 
 
-def data_plot_2d(h, y_pred_history, ax=None, fig=None):
+def data_plot_2d(h, y_pred_history):
     if h.X.shape[1] != 2:
         return
-
-    if ax is None or fig is None:
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,6.15))
 
     x = h.X[:, 1]
     y = list(map(lambda x: x[0], h.y))
 
-    ax.plot(x, y, 'b.', label='data')
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=x, y=y,
+                    mode='markers',
+                    name='data'))
 
     tr = 0.1
     for i in range(len(y_pred_history)):
-        if ((i % 25 == 0) ):
-            ax.plot(x, y_pred_history[i],'r-', alpha=tr)
-            tr += 14 / len(y_pred_history)
-    ax.plot(x, y_pred_history[i],'r-', alpha=1, label='approximating curve')
+        if i % 25 == 0:
+            fig.add_trace(go.Scatter(x=x, y=list(map(lambda x: x[0], y_pred_history[i])),
+                    opacity=tr,
+                    line=dict(color='firebrick', width=2),
+                    mode='lines',
+                    showlegend=False,
+                    name=f'{1 if i == 0 else i} iteration'))
 
-    ax.set_xlabel(r'$X$')
-    ax.set_ylabel(r'$y$')
-    ax.set_title('Data')
-    ax.legend()
-    plt.show()
-    st.pyplot()
+            tr += 14 / len(y_pred_history)
+
+    fig.add_trace(go.Scatter(x=x, y=list(map(lambda x: x[0], y_pred_history[i])),
+                    opacity=1,
+                    line=dict(color='firebrick', width=2),
+                    mode='lines',
+                    showlegend=True,
+                    name=f'approximating curve'))
+
+    fig.update_layout(title='Data scatter plot and Approxomating curve', autosize=False,
+                      width=900,
+                      height=600,
+                      xaxis_title='X',
+                      yaxis_title='y')
+
+    st.plotly_chart(fig)
