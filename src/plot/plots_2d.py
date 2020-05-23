@@ -2,37 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import streamlit as st
+from plot import compute_j_grid
 
 
-def compute_j_grid(h, theta0_grid, theta1_grid, cost_function, C=1, regularization=None):
-    penalty, grad_penalty = regularization(h, C)
-
-    grid = []
-    for theta0 in theta0_grid:
-        row = []
-        for theta1 in theta1_grid:
-            w = np.array([[theta0], [theta1]])
-            y_pred = h.hypothesis(w=w)
-            elem = cost_function.get_loss(y_pred, h.y) + penalty(w)
-            row.append(elem)
-        grid.append(row)
-    return np.array(grid)
-
-
-def cost_function_plot_2d(h, properties, weights_history, ax=None, fig=None):
+def cost_function_plot_2d(h, properties, weights_history):
     if h.X.shape[1] != 2 and len(weights_history) > 2:
         return
 
-    if ax is None or fig is None:
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,6.15))
-
-    x = h.X[:, 1]
-    y = list(map(lambda x: x[0], h.y))
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,6.15))
 
     theta = [np.array([i[0][0], i[1][0]]) for i in weights_history]
 
-    theta0 = [i[0] for i in weights_history]
-    theta1 = [i[1] for i in weights_history]
+    theta0 = np.array([i[0][0] for i in weights_history])
+    theta1 = np.array([i[1][0] for i in weights_history])
 
     thetha0_min = np.min(theta0) - 3*np.std(theta0)
     thetha0_max = np.max(theta0) + 3*np.std(theta0)

@@ -1,1 +1,1 @@
-from regularization.regularization import regularization
+from regularization.regularization import get_regularization_func
