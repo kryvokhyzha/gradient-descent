@@ -1,12 +1,9 @@
 import numpy as np 
-import streamlit as st
-from sklearn.metrics import mean_squared_error
-
 from regularization import get_regularization_func
 
 
-def classic_grad_descent(hypothes, max_num_itter, cost_function, regularization=None, C=1, alpha=0.01, eps=0.01):
-    penalty, grad_penalty = get_regularization_func(hypothes, C, regularization)
+def classic_grad_descent(hypothes, max_num_itter, cost_function, regularization=None, C=1, alpha=0.01, eps=0.01, mini_batch_size=32):
+    penalty, grad_penalty = get_regularization_func(C, regularization, mini_batch_size=len(hypothes.y))
 
     weights_history = [hypothes.weight.copy()]
     y_pred_history = []
