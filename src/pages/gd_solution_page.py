@@ -75,7 +75,7 @@ def params_for_generate_regression():
 
     n_features = int(st.number_input('The number of features', key='n_features_r', min_value=1, value=1, step=1))
 
-    n_informative = int(st.number_input('The number of informative features', key='n_informative_r', min_value=1, value=1, step=1))
+    n_informative = int(st.number_input('The number of informative features', key='n_informative_r', min_value=1, max_value=n_features, value=1, step=1))
 
     noise = float(st.number_input('The standard deviation of the gaussian noise applied to the output',
                                           key='noise_r', min_value=0.0, value=10.0, step=0.1))
@@ -95,12 +95,12 @@ def params_for_generate_classification():
 
     n_features = int(st.number_input('The number of features', key='n_features_c', min_value=1, value=1, step=1))
 
+    n_informative = int(st.number_input('The number of informative features', key='n_informative_c', min_value=1, max_value=n_features, value=1, step=1))
+
     n_redundant_title = 'The number of redundant features. These features are generated as random linear combinations of the informative features'
-    n_redundant = int(st.number_input(n_redundant_title, key='n_redundant_c', min_value=0, value=0, step=1))
+    n_redundant = int(st.number_input(n_redundant_title, key='n_redundant_c', min_value=0, max_value=int(n_features - n_informative), value=0, step=1))
 
-    n_informative = int(st.number_input('The number of informative features', key='n_informative_c', min_value=1, value=1, step=1))
-
-    n_clusters_per_class = int(st.number_input('The number of clusters per class.', key='n_clusters_per_class_c', min_value=1, value=1, step=1))
+    n_clusters_per_class = int(st.number_input('The number of clusters per class.', key='n_clusters_per_class_c', min_value=1, max_value=n_informative, value=1, step=1))
 
     return {
         'n_samples': n_samples,
