@@ -26,29 +26,28 @@ def stochastic_grad_descent(hypothes, max_num_itter, cost_function, regularizati
     m = len(hypothes.y)
 
     for _ in range(max_num_itter):
-        loss = 0
-        for _ in range(m):
-            rand_i = np.random.randint(0,m)
-            y_pred = hypothes.hypothesis()
-            weight_prev = hypothes.weight.copy()
+        rand_i = np.random.randint(0,m)
+        y_pred = hypothes.hypothesis()
+        weight_prev = hypothes.weight.copy()
 
-            loss += cost_function.get_loss(y_pred, hypothes.y) + penalty(hypothes.weight)
-            
-            gp_value = grad_penalty(hypothes.weight)
-            gp_value[0, :] = 0
-
-            hypothesis_grad = hypothes.hypothesis_grad()
-            Xi = hypothesis_grad[rand_i,:].reshape(1,hypothesis_grad.shape[1])
-            yi = hypothes.y[rand_i].reshape(1,1)
-            pred = y_pred[rand_i].reshape(1,1)
-
-            hypothes.weight -= alpha * (cost_function.get_grad(pred, yi, Xi) + gp_value)
-
-            if (np.abs(weight_prev - hypothes.weight).sum()) < eps:
-                print('EPS!')
-                break
-        loss_history.append(loss)
-        weights_history.append(hypothes.weight.copy())
         y_pred_history.append(y_pred.copy())
+
+        loss = cost_function.get_loss(y_pred, hypothes.y) + penalty(hypothes.weight)
+        loss_history.append(loss)
+
+        gp_value = grad_penalty(hypothes.weight)
+        gp_value[0, :] = 0
+
+        hypothesis_grad = hypothes.hypothesis_grad()
+        Xi = hypothesis_grad[rand_i,:].reshape(1,hypothesis_grad.shape[1])
+        yi = hypothes.y[rand_i].reshape(1,1)
+        pred = y_pred[rand_i].reshape(1,1)
+
+        hypothes.weight -= alpha * (cost_function.get_grad(pred, yi, Xi) + gp_value)
+        weights_history.append(hypothes.weight.copy())
+
+        if (np.abs(weight_prev - hypothes.weight).sum()) < eps:
+            print('EPS!')
+            break
 
     return loss_history, np.array(weights_history), np.array(y_pred_history)
