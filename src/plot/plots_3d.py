@@ -5,7 +5,7 @@ import streamlit as st
 from plot import compute_j_grid, compute_j
 
 
-def cost_function_plot_3d(h, properties, weights_history):
+def cost_function_plot_3d(h, properties, weights_history, loss_history):
     if h.X.shape[1] != 2 and len(weights_history) > 2:
         return
 
@@ -34,6 +34,15 @@ def cost_function_plot_3d(h, properties, weights_history):
     fig.add_trace(
         go.Surface(x=X, y=Y, z=J_grid, colorscale='RdBu', showscale=False))
 
+    fig.add_trace(go.Scatter3d(x=theta0, y=theta1, z=loss_history, mode='lines+markers',
+                    marker=dict(
+                        size=3,
+                        color='green',
+                        #color=y,                # set color to an array/list of desired values
+                       # colorscale='greens',   # choose a colorscale
+                        opacity=0.8
+                    )))
+    
     fig.update_layout(title='Cost function surface plot', autosize=False,
                       width=900,
                       height=600)

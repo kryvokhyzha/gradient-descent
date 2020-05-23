@@ -5,7 +5,7 @@ from plot.plots_3d import data_plot_3d, cost_function_plot_3d
 
 def plot_all(h, properties, weights_history, loss_history, y_pred_history):
     cost_function_plot_2d(h, properties, weights_history)
-    cost_function_plot_3d(h, properties, weights_history)
+    cost_function_plot_3d(h, properties, weights_history, loss_history)
     loss_plot_2d(loss_history)
     data_plot_2d(h, y_pred_history)
     data_plot_3d(h, y_pred_history)

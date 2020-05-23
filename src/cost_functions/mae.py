@@ -1,13 +1,11 @@
 import numpy as np 
 
+
 class MAE:
     @staticmethod
-    def mean_absolute_error_grad(y_pred, y, h_grad):
-        """
-        h_grad - gradient of hypothesis function
-        """
-        pass
+    def get_grad(y_pred, y, h_grad):
+        return h_grad.T.dot(np.sign(y_pred - y)) / (2*len(y))
 
     @staticmethod
-    def mean_absolute_error(y_pred, y):
-        pass
+    def get_loss(y_pred, y):
+        return np.sum(np.abs(y_pred - y)) / (2*len(y))

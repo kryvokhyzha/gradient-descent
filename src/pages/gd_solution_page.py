@@ -112,7 +112,8 @@ def params_for_generate_classification():
 
 
 def generate_regression_task(h_type, scaler, **kwargs):
-    X, y = make_regression(**kwargs)
+    X, y, coef = make_regression(coef=True, **kwargs)
+    print('------coef', coef)
     if scaler is not None:
         X = scaler.fit_transform(X)
 

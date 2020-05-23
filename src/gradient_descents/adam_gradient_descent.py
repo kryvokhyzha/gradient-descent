@@ -32,8 +32,8 @@ def adam_grad_descent(hypothes, max_num_itter, cost_function, regularization=Non
         avg_gd = beta1*avg_gd + (1 - beta1)*(grad)
         avg_sq_gd = beta2*avg_sq_gd + (1 - beta2)*(grad)**2
 
-        avg_gd_hat = avg_gd / (1 - np.power(beta1, i))
-        avg_sq_gd_hat = avg_sq_gd / (1 - np.power(beta2, i))
+        avg_gd_hat = avg_gd / (1 - np.power(beta1, i+1))
+        avg_sq_gd_hat = avg_sq_gd / (1 - np.power(beta2, i+1))
 
         hypothes.weight -= alpha * ((avg_gd_hat / (np.sqrt(avg_sq_gd_hat) + epsilon)) + gp_value)
         weights_history.append(hypothes.weight.copy())
