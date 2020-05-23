@@ -5,12 +5,7 @@ import streamlit as st
 
 
 def compute_j_grid(h, theta0_grid, theta1_grid, cost_function, C=1, regularization=None):
-    if regularization is None:
-        penalty = lambda x: (x * 0).sum()
-    elif regularization == 'L1':
-        penalty = lambda x: C*np.abs(x)[:, 1:].sum() / len(h.y)
-    elif regularization == 'L2':
-        penalty = lambda x: C * np.square(x)[:, 1:].sum() / (len(h.y)*2)
+    penalty, grad_penalty = regularization(h, C)
 
     grid = []
     for theta0 in theta0_grid:
@@ -66,20 +61,6 @@ def cost_function_plot_2d(h, properties, weights_history, ax=None, fig=None):
 
     plt.show()
     st.pyplot()
-
-#    data = go.Contour(
-#        z=J_grid,
-#        contours=dict(
-#            coloring='lines',
-#            showlabels=True, # show labels on contours
-#            labelfont=dict( # label font properties
-#                size=12,
-#                color='black',
-#            ))
-#    )
-    
-#    fig = go.Figure(data=data)
-#    st.plotly_chart(fig)
 
 
 def loss_plot_2d(loss_history):
