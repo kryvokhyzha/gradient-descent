@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def regularization(hypothes, C):
+def get_regularization_func(hypothes, C, regularization):
     if regularization is None:
         penalty = lambda x: (x * 0).sum()
         grad_penalty = lambda x: x * 0

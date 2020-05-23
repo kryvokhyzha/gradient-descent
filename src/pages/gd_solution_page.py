@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 from utils.constants import *
 from db import db_insert
-from plot import cost_function_plot_2d, loss_plot_2d, data_plot_2d
+from plot import plot_all
 
 
 
@@ -156,11 +156,8 @@ def solve_btn(h, properties, choice):
         
         db_insert(h, properties, time.time() - start_time, choice)
 
-        cost_function_plot_2d(h, properties, weights_history)
-        loss_plot_2d(loss_history)
-        data_plot_2d(h, y_pred_history)
+        plot_all(h, properties, weights_history, loss_history, y_pred_history)
         
-
 
 def gd_solution_page():
     st.title('Gradient Descent')
