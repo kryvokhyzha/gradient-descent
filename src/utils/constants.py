@@ -1,4 +1,4 @@
-from gradient_descents import classic_grad_descent
+from gradient_descents import classic_grad_descent, stochastic_grad_descent
 from hypotheses import Linear
 from cost_functions import MSE
 
@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 MODIFICATIONS = {
     'Classic GD': classic_grad_descent,
-    'SGD': classic_grad_descent,
+    'SGD': stochastic_grad_descent,
     'SGD with Momentum': classic_grad_descent,
     'RMSProp': classic_grad_descent,
     'Adam': classic_grad_descent
