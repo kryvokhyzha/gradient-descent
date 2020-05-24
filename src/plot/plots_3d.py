@@ -6,7 +6,7 @@ from plot import compute_j_grid, compute_j
 
 
 def cost_function_plot_3d(h, properties, weights_history, loss_history):
-    if h.X.shape[1] != 2 and len(weights_history) > 2:
+    if h.weight.shape[0] != 2 and len(weights_history) > 2:
         return
 
     y = list(map(lambda x: x[0], h.y))
@@ -51,10 +51,10 @@ def cost_function_plot_3d(h, properties, weights_history, loss_history):
 
 
 def data_plot_3d(h, y_pred_history):
-    if h.X.shape[1] != 3:
+    if h.X_raw.shape[1] != 3:
         return
 
-    x = h.X[:, 1:]
+    x = h.X_raw[:, 1:]
     y = list(map(lambda x: x[0], h.y))
 
     fig = go.Figure()

@@ -6,7 +6,7 @@ from plot import compute_j_grid
 
 
 def cost_function_plot_2d(h, properties, weights_history):
-    if h.X.shape[1] != 2 and len(weights_history) > 2:
+    if h.weight.shape[0] != 2 and len(weights_history) > 2:
         return
 
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,6.15))
@@ -62,10 +62,10 @@ def loss_plot_2d(loss_history):
 
 
 def data_plot_2d(h, y_pred_history):
-    if h.X.shape[1] != 2:
+    if h.X_raw.shape[1] != 2:
         return
 
-    x = h.X[:, 1]
+    x = h.X_raw[:, 1]
     y = list(map(lambda x: x[0], h.y))
 
     fig = go.Figure()
@@ -77,7 +77,11 @@ def data_plot_2d(h, y_pred_history):
     tr = 0.1
     for i in range(len(y_pred_history)):
         if i % 25 == 0:
-            fig.add_trace(go.Scatter(x=x, y=list(map(lambda x: x[0], y_pred_history[i])),
+            y_pred_history_temp = list(map(lambda x: x[0], y_pred_history[i]))
+            XY = list(zip(x, y_pred_history_temp))
+            XY.sort(key=lambda x: x[0])
+
+            fig.add_trace(go.Scatter(x=[i[0] for i in XY], y=[i[1] for i in XY],
                     opacity=tr,
                     line=dict(color='firebrick', width=2),
                     mode='lines',
@@ -85,10 +89,14 @@ def data_plot_2d(h, y_pred_history):
                     name=f'{1 if i == 0 else i} iteration'))
 
             tr += 14 / len(y_pred_history)
+    
+    y_pred_history_temp = list(map(lambda x: x[0], y_pred_history[i]))
+    XY = list(zip(x, y_pred_history_temp))
+    XY.sort(key=lambda x: x[0])
 
-    fig.add_trace(go.Scatter(x=x, y=list(map(lambda x: x[0], y_pred_history[i])),
+    fig.add_trace(go.Scatter(x=[i[0] for i in XY], y=[i[1] for i in XY],
                     opacity=1,
-                    line=dict(color='firebrick', width=2),
+                    line=dict(color='green', width=3),
                     mode='lines',
                     showlegend=True,
                     name=f'approximating curve'))
@@ -96,6 +104,7 @@ def data_plot_2d(h, y_pred_history):
     fig.update_layout(title='Data scatter plot and Approxomating curve', autosize=False,
                       width=900,
                       height=600,
+                      yaxis=dict(range=[-5,25]),
                       xaxis_title='X',
                       yaxis_title='y')
 

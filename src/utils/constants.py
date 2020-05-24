@@ -27,11 +27,13 @@ COST_FUNCTIONS = {
     'BCE': BCE
 }
 
+
 REGULARIZATION = {
     'None': None,
     'L1': 'L1',
     'L2': 'L2'
 }
+
 
 SCALE = {
     'None': None,

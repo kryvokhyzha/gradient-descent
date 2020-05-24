@@ -24,6 +24,12 @@ def show_side_bar():
     hypothesis = st.sidebar.selectbox('', key='hypothesis_slbox',
                                       options=list(HYPOTHESES.keys()))
 
+    if hypothesis == 'Polynomial':
+        st.sidebar.header('Polynomial degree')
+        degree = int(st.sidebar.number_input('', key='degree', min_value=1, value=2, step=1))
+    else:
+        degree = 1
+
     st.sidebar.header('Cost function')
     cost_function = st.sidebar.selectbox('', key='costf_slbox',
                                          options=list(COST_FUNCTIONS.keys()))
@@ -35,8 +41,11 @@ def show_side_bar():
     st.sidebar.header('Scaling function')
     scaler = st.sidebar.selectbox('', key='scale_slbox', options=list(SCALE.keys()))
 
-    st.sidebar.header('Regularization coeff')
-    reg_coef = float(st.sidebar.number_input('', key='reg_coef', min_value=0.0, value=1.0, step=0.1))
+    if regularization != 'None':
+        st.sidebar.header('Regularization coeff')
+        reg_coef = float(st.sidebar.number_input('', key='reg_coef', min_value=0.0, value=1.0, step=0.1))
+    else:
+        reg_coef = 0.0
 
     st.sidebar.header('Learning rate')
     alpha = st.sidebar.slider('', 0.001, 0.1, step=0.001, format='%f', key='learning_rate')
@@ -47,13 +56,13 @@ def show_side_bar():
     st.sidebar.header('Max number of itteration')
     max_num_itter = int(st.sidebar.number_input('', key='max_num_itter', min_value=1, value=100, step=1))
 
-    Properties = namedtuple('Properties', ['modification', 'hypothesis', 'cost_function',
+    Properties = namedtuple('Properties', ['modification', 'hypothesis', 'degree', 'cost_function',
                             'scaler', 'regularization', 'reg_coef', 'alpha', 'eps', 'max_num_itter'])
     
     Choice = namedtuple('Choice', ['modification', 'hypothesis', 'cost_function',
                             'scaler', 'regularization'])
 
-    return Properties(modification=MODIFICATIONS[modification], hypothesis=HYPOTHESES[hypothesis],
+    return Properties(modification=MODIFICATIONS[modification], hypothesis=HYPOTHESES[hypothesis], degree=degree,
                       cost_function=COST_FUNCTIONS[cost_function], scaler=SCALE[scaler],
                       regularization=REGULARIZATION[regularization], reg_coef=reg_coef,
                       eps=eps, alpha=alpha, max_num_itter=max_num_itter), Choice(modification=modification,
@@ -77,6 +86,8 @@ def params_for_generate_regression():
 
     n_informative = int(st.number_input('The number of informative features', key='n_informative_r', min_value=1, max_value=n_features, value=1, step=1))
 
+    degree = int(st.number_input('The number of degree', key='degree_r', min_value=1, value=1, step=1))
+
     noise = float(st.number_input('The standard deviation of the gaussian noise applied to the output',
                                           key='noise_r', min_value=0.0, value=10.0, step=0.1))
 
@@ -85,7 +96,7 @@ def params_for_generate_regression():
         'n_features': n_features,
         'n_informative': n_informative,
         'noise': noise
-    }
+    }, degree
 
 
 def params_for_generate_classification():
@@ -111,33 +122,33 @@ def params_for_generate_classification():
     }
 
 
-def generate_regression_task(h_type, scaler, **kwargs):
-    X, y, coef = make_regression(coef=True, **kwargs)
-    print('------coef', coef)
+def generate_regression_task(h_type, degree, scaler, data_degree, **kwargs):
+    X, y = make_regression(**kwargs)
+    y = y.reshape((len(y), 1))
     if scaler is not None:
         X = scaler.fit_transform(X)
+        y = scaler.fit_transform(y)
 
-    y = y.reshape((len(y), 1))
-    return h_type(X, y)
+    y = y ** data_degree
+    return h_type(X, y, degree=degree)
 
 
-def generate_clasiffication_task(h_type, scaler, **kwargs):
+def generate_clasiffication_task(h_type, degree, scaler, **kwargs):
     X, y = make_classification(**kwargs)
     if scaler is not None:
         X = scaler.fit_transform(X)
 
     y = y.reshape((len(y), 1))
-    return h_type(X, y)
+    return h_type(X, y, degree=degree)
 
 
-def individual_task(h_type, scaler):
+def individual_task(h_type, degree, scaler):
     df = pd.read_csv('data/restaurant_revenue.txt', header=None, sep=',')
     if scaler is not None:
-        X = scaler.fit_transform(df[[0]].values)
-    else:
-        X = df[[0]].values
+        df = pd.DataFrame(scaler.fit_transform(df.values))
+    X = df[[0]].values
     y = df[[1]].values
-    return h_type(X, y)
+    return h_type(X, y, degree=degree)
 
 
 def solve_btn(h, properties, choice):
@@ -166,13 +177,12 @@ def gd_solution_page():
     task_type = select_task_type()
     
     if task_type == 'Individual':
-        h = individual_task(properties.hypothesis, properties.scaler)
+        h = individual_task(properties.hypothesis, properties.degree, properties.scaler)
     elif task_type == 'Generate regression task':
-        kwargs = params_for_generate_regression()
-        h = generate_regression_task(properties.hypothesis, properties.scaler, **kwargs)
+        kwargs, degree = params_for_generate_regression()
+        h = generate_regression_task(properties.hypothesis, properties.degree, properties.scaler, degree, **kwargs)
     elif task_type == 'Generate classification task':
         kwargs = params_for_generate_classification()
-        h = generate_clasiffication_task(properties.hypothesis, properties.scaler, **kwargs)
+        h = generate_clasiffication_task(properties.hypothesis, properties.degree, properties.scaler, **kwargs)
     
     solve_btn(h, properties, choice)
-

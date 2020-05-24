@@ -7,7 +7,7 @@ class Linear(Abstract_Hypothesis):
 
     def __init__(self, X, y, degree=1):
         poly = PolynomialFeatures(degree=degree)
-        self.X = poly.fit_transform(X) #np.hstack((np.ones((len(X), 1)), X)) 
+        self.X = poly.fit_transform(X)
         self.X_raw = self.X
         self.y = y 
         self.weight = np.random.normal(size=(self.X.shape[1], 1))
