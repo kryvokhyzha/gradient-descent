@@ -1,6 +1,6 @@
 from gradient_descents import classic_grad_descent, stochastic_grad_descent, momentum_grad_descent, rmsprop_grad_descent, adam_grad_descent
-from hypotheses import Linear
-from cost_functions import MSE, MAE
+from hypotheses import Linear, Sigmoid, Polynomial
+from cost_functions import MSE, MAE, BCE
 
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
@@ -16,13 +16,15 @@ MODIFICATIONS = {
 
 HYPOTHESES = {
     'Linear': Linear,
-    'Square': Linear
+    'Polynomial': Polynomial,
+    'Sigmoid': Sigmoid
 }
 
 
 COST_FUNCTIONS = {
     'MSE': MSE,
-    'MAE': MAE
+    'MAE': MAE,
+    'BCE': BCE
 }
 
 REGULARIZATION = {

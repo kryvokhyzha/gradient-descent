@@ -34,7 +34,7 @@ def cost_function_plot_3d(h, properties, weights_history, loss_history):
     fig.add_trace(
         go.Surface(x=X, y=Y, z=J_grid, colorscale='RdBu', showscale=False))
 
-    fig.add_trace(go.Scatter3d(x=theta0, y=theta1, z=loss_history, mode='lines+markers',
+    fig.add_trace(go.Scatter3d(x=theta0[1:], y=theta1[1:], z=loss_history[1:], mode='lines+markers',
                     marker=dict(
                         size=3,
                         color='green',

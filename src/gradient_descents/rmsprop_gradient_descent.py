@@ -35,5 +35,6 @@ def rmsprop_grad_descent(hypothes, max_num_itter, cost_function, regularization=
         if (np.abs(weight_prev - hypothes.weight).sum()) < eps:
             print('EPS!')
             break
-
+    
+    print(y_pred_history)
     return loss_history, np.array(weights_history), np.array(y_pred_history)
