@@ -145,9 +145,11 @@ def generate_clasiffication_task(h_type, degree, scaler, **kwargs):
 def individual_task(h_type, degree, scaler):
     df = pd.read_csv('data/restaurant_revenue.txt', header=None, sep=',')
     if scaler is not None:
-        df = pd.DataFrame(scaler.fit_transform(df.values))
-    X = df[[0]].values
-    y = df[[1]].values
+        X = scaler.fit_transform(df[[0]].values)
+        y = scaler.fit_transform(df[[1]].values)
+    else:
+        X = df[[0]].values
+        y = df[[1]].values
     return h_type(X, y, degree=degree)
 
 
