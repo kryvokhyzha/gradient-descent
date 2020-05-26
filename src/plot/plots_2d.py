@@ -48,10 +48,14 @@ def cost_function_plot_2d(h, properties, weights_history):
 def loss_plot_2d(loss_history):
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=list(range(1, len(loss_history)+1)), y=loss_history,
-                    opacity=1,
-                    line=dict(color='firebrick', width=1),
-                    mode='lines+markers'))
+    if len(loss_history.shape) == 1:
+        loss_history = [loss_history]
+ 
+    for loss in loss_history:
+        fig.add_trace(go.Scatter(x=list(range(1, len(loss)+1)), y=loss,
+                        opacity=1,
+                        line=dict(color='firebrick', width=1),
+                        mode='lines+markers'))
 
     fig.update_layout(title='Cost function value for each iteration', autosize=False,
                       width=800,

@@ -34,4 +34,4 @@ def momentum_grad_descent(hypothes, max_num_itter, cost_function, regularization
             print('EPS!')
             break
 
-    return loss_history, np.array(weights_history), np.array(y_pred_history)
+    return np.array(loss_history), np.array(weights_history), np.array(y_pred_history)
