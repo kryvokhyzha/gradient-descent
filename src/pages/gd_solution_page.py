@@ -26,7 +26,7 @@ def show_side_bar():
 
     if hypothesis != 'Linear':
         st.sidebar.header('Polynomial degree')
-        degree = int(st.sidebar.number_input('', key='degree', min_value=1, value=2, step=1))
+        degree = int(st.sidebar.number_input('', key='degree', min_value=1, max_value=4, value=2, step=1))
     else:
         degree = 1
 
@@ -54,7 +54,7 @@ def show_side_bar():
     eps = st.sidebar.slider('', 0.0, 0.1, step=0.001, format='%f', key='early_stopping')
 
     st.sidebar.header('Max number of itteration')
-    max_num_itter = int(st.sidebar.number_input('', key='max_num_itter', min_value=1, value=100, step=1))
+    max_num_itter = int(st.sidebar.number_input('', key='max_num_itter', min_value=1, max_value=10000, value=100, step=1))
 
     Properties = namedtuple('Properties', ['modification', 'hypothesis', 'degree', 'cost_function',
                             'scaler', 'regularization', 'reg_coef', 'alpha', 'eps', 'max_num_itter'])
@@ -80,13 +80,13 @@ def select_task_type():
 def params_for_generate_regression():
     st.header('Please, select parameters for dataset generation')
 
-    n_samples = int(st.number_input('The number of samples', key='n_samples_r', min_value=1, value=100, step=1))
+    n_samples = int(st.number_input('The number of samples', key='n_samples_r', min_value=1, max_value=1000, value=100, step=1))
 
-    n_features = int(st.number_input('The number of features', key='n_features_r', min_value=1, value=1, step=1))
+    n_features = int(st.number_input('The number of features', key='n_features_r', min_value=1, max_value=10, value=1, step=1))
 
     n_informative = int(st.number_input('The number of informative features', key='n_informative_r', min_value=1, max_value=n_features, value=1, step=1))
 
-    degree = int(st.number_input('The number of degree', key='degree_r', min_value=1, value=1, step=1))
+    degree = int(st.number_input('The number of degree', key='degree_r', min_value=1, max_value=4, value=1, step=1))
 
     noise = float(st.number_input('The standard deviation of the gaussian noise applied to the output',
                                           key='noise_r', min_value=0.0, value=10.0, step=0.1))
@@ -102,9 +102,9 @@ def params_for_generate_regression():
 def params_for_generate_classification():
     st.header('Please, select parameters for dataset generation')
 
-    n_samples = int(st.number_input('The number of samples', key='n_samples_c', min_value=1, value=100, step=1))
+    n_samples = int(st.number_input('The number of samples', key='n_samples_c', min_value=1, max_value=1000, value=100, step=1))
 
-    n_features = int(st.number_input('The number of features', key='n_features_c', min_value=1, value=1, step=1))
+    n_features = int(st.number_input('The number of features', key='n_features_c', min_value=1, max_value=10, value=1, step=1))
 
     n_informative = int(st.number_input('The number of informative features', key='n_informative_c', min_value=1, max_value=n_features, value=1, step=1))
 
@@ -192,5 +192,8 @@ def gd_solution_page():
         task_type = 'classification'
         kwargs = params_for_generate_classification()
         h = generate_clasiffication_task(properties.hypothesis, properties.degree, properties.scaler, **kwargs)
+
+    if choice.cost_function == 'BCE' and task_type != 'classification':
+        st.warning('Please, select another cost function for correct working!')
     
     solve_btn(h, properties, choice, task_type)
