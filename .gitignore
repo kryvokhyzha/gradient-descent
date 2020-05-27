@@ -117,3 +117,8 @@ db.txt
 .bash_history
 
 *.db
+
+image/
+node_modules/
+package-lock.json
+
