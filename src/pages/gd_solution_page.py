@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 from utils.constants import *
 from db import db_insert
-from plot import plot_all
+from plot import plot_regression_all, plot_classification_all
 
 
 
@@ -24,7 +24,7 @@ def show_side_bar():
     hypothesis = st.sidebar.selectbox('', key='hypothesis_slbox',
                                       options=list(HYPOTHESES.keys()))
 
-    if hypothesis == 'Polynomial':
+    if hypothesis != 'Linear':
         st.sidebar.header('Polynomial degree')
         degree = int(st.sidebar.number_input('', key='degree', min_value=1, value=2, step=1))
     else:
@@ -153,7 +153,7 @@ def individual_task(h_type, degree, scaler):
     return h_type(X, y, degree=degree)
 
 
-def solve_btn(h, properties, choice):
+def solve_btn(h, properties, choice, task_type):
     if st.button('Solve', key='solve_btn'):
         start_time = time.time()
         st.write(h.weight)
@@ -170,7 +170,10 @@ def solve_btn(h, properties, choice):
         
         db_insert(h, properties, time.time() - start_time, choice)
 
-        plot_all(h, properties, weights_history, loss_history, y_pred_history)
+        if task_type == 'classification':
+            plot_classification_all(h, properties, weights_history, loss_history, y_pred_history)
+        elif task_type == 'regression':
+            plot_regression_all(h, properties, weights_history, loss_history, y_pred_history)
         
 
 def gd_solution_page():
@@ -179,12 +182,15 @@ def gd_solution_page():
     task_type = select_task_type()
     
     if task_type == 'Individual':
+        task_type = 'regression'
         h = individual_task(properties.hypothesis, properties.degree, properties.scaler)
     elif task_type == 'Generate regression task':
+        task_type = 'regression'
         kwargs, degree = params_for_generate_regression()
         h = generate_regression_task(properties.hypothesis, properties.degree, properties.scaler, degree, **kwargs)
     elif task_type == 'Generate classification task':
+        task_type = 'classification'
         kwargs = params_for_generate_classification()
         h = generate_clasiffication_task(properties.hypothesis, properties.degree, properties.scaler, **kwargs)
     
-    solve_btn(h, properties, choice)
+    solve_btn(h, properties, choice, task_type)
