@@ -2,3 +2,4 @@ from pages.general_page import general_page
 from pages.gd_solution_page import gd_solution_page
 from pages.about_us_page import about_us_page
 from pages.user_history_page import user_history_page
+from pages.comparison_page import comparison_page
