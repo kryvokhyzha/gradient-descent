@@ -65,7 +65,7 @@ def loss_plot_2d(loss_history):
             fig.add_trace(go.Scatter(x=list(range(1, len(loss)+1)), y=loss,
                             opacity=1,
                             line=dict(color=colors[i], width=3),
-                            mode='lines', name = algorithm_name[i]))
+                            mode='lines', name=algorithm_name[i]))
 
     fig.update_layout(title=title, autosize=False,
                       width=800,
