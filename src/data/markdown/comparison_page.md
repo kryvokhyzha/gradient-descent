@@ -5,4 +5,3 @@
 - Polynomial hypothesis (degree = 2)
 ![Alt Text](https://github.com/kryvokhyzha/gradient-descent/blob/comparison/src/data/visualize/GD_polynomial.gif?raw=true)
  
-- Difference of cost function value for each iteration 
