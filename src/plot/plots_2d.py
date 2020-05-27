@@ -75,6 +75,26 @@ def loss_plot_2d(loss_history):
     st.plotly_chart(fig)
 
 
+def execution_time_plot_2d(time_history):
+    fig = go.Figure()
+
+    colors = ['green', 'red', 'yellow']
+    algorithm_name = ['Classic GD', 'SGD', 'Momentum']
+
+    for i, time in enumerate(time_history):
+        fig.add_trace(go.Scatter(x=list(range(1, len(time)+1)), y=time,
+                            line=dict(color=colors[i], width=3),
+                            mode='lines', name=algorithm_name[i]))
+    
+    fig.update_layout(title='Execution time for each iteration', autosize=False,
+                      width=800,
+                      height=600,
+                      xaxis_title='num_iter',
+                      yaxis_title='execution_time')
+    
+    st.plotly_chart(fig)
+
+
 def data_plot_2d(h, y_pred_history):
     if h.X_raw.shape[1] != 2:
         return
