@@ -71,7 +71,7 @@ def show_side_bar():
 
 
 def select_task_type():
-    st.header('Please, select type task')
+    st.header('Please, select type of task:')
     task_type = st.selectbox('', key='type_slbox', options=['Individual', 'Generate regression task', 'Generate classification task'])
 
     return task_type
@@ -155,18 +155,20 @@ def individual_task(h_type, degree, scaler):
 
 def solve_btn(h, properties, choice, task_type):
     if st.button('Solve', key='solve_btn'):
+        st.text('Started weights:')
+        st.write(pd.DataFrame(h.weight, columns=['w']))
         start_time = time.time()
-        st.write(h.weight)
         with st.spinner('waiting...'):
             loss_history, weights_history, y_pred_history = properties.modification(h, properties.max_num_itter, properties.cost_function,
                                                                                     regularization=properties.regularization, C=properties.reg_coef,
                                                                                     alpha=properties.alpha, eps=properties.eps)
-            st.success('Finished!')
+            st.success('Calculations have already finished! Look at the results:')
 
         if np.isnan(h.weight).any():
             st.error("Result approximates to infinity. Please, select another parameters.")
         else:
-            st.write(h.weight)
+            st.text('Finished weights:')
+            st.write(pd.DataFrame(h.weight, columns=['w']))
         
         db_insert(h, properties, time.time() - start_time, choice)
 
