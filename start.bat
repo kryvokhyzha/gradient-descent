@@ -1,1 +1,0 @@
-python -m streamlit.cli run src/app.py
