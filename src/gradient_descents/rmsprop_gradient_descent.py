@@ -1,10 +1,10 @@
-import numpy as np 
+import numpy as np
 from regularization import get_regularization_func
 
 
 def rmsprop_grad_descent(hypothes, max_num_itter, cost_function, regularization=None, C=1, alpha=0.01, eps=0.01, beta=0.9, epsilon=1e-6, mini_batch_size=32):
     penalty, grad_penalty = get_regularization_func(C, regularization, len(hypothes.y), mini_batch_size=mini_batch_size)
-    
+
     weights_history = [hypothes.weight]
     y_pred_history = []
     loss_history = []

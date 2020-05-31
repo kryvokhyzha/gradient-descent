@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 from regularization import get_regularization_func
 
 

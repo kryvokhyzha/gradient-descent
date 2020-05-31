@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 from regularization import get_regularization_func
 
 
@@ -25,7 +25,7 @@ def momentum_grad_descent(hypothes, max_num_itter, cost_function, regularization
         gp_value[0, :] = 0
 
         hypothesis_grad = hypothes.hypothesis_grad()[rand_i]
-       
+
         v = v*beta + alpha * (cost_function.get_grad(y_pred[rand_i], hypothes.y[rand_i], hypothesis_grad) + gp_value)
         hypothes.weight -= v
         weights_history.append(hypothes.weight.copy())

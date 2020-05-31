@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 from regularization import get_regularization_func
 
 
@@ -20,7 +20,7 @@ def classic_grad_descent(hypothes, max_num_itter, cost_function, regularization=
 
         gp_value = grad_penalty(hypothes.weight)
         gp_value[0, :] = 0
-        
+
         hypothes.weight -= alpha * (cost_function.get_grad(y_pred, hypothes.y, hypothes.hypothesis_grad()) + gp_value)
 
         weights_history.append(hypothes.weight.copy())
