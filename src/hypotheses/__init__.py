@@ -1,3 +1,4 @@
+from hypotheses.abstract_hypothesis import Abstract_Hypothesis
 from hypotheses.linear_hypothesis import Linear
 from hypotheses.polynomial_hypothesis import Polynomial
 from hypotheses.sigmoid_hypothesis import Sigmoid

@@ -1,7 +1,8 @@
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import streamlit as st
-from plot import compute_j_grid
+from plot import compute_j_grid, compute_j
 import gc
 from hypotheses import Polynomial
 
@@ -9,6 +10,10 @@ from hypotheses import Polynomial
 def cost_function_plot_3d(h, properties, weights_history, loss_history):
     if h.weight.shape[0] != 2 and len(weights_history) > 2:
         return
+
+    y = list(map(lambda x: x[0], h.y))
+
+    theta = [np.array([i[0][0], i[1][0]]) for i in weights_history]
 
     theta0 = np.array([i[0][0] for i in weights_history])
     theta1 = np.array([i[1][0] for i in weights_history])
@@ -39,7 +44,7 @@ def cost_function_plot_3d(h, properties, weights_history, loss_history):
                        # colorscale='greens',   # choose a colorscale
                         opacity=0.8
                     )))
-
+    
     fig.update_layout(title='Cost function surface plot', autosize=False,
                       width=900,
                       height=600)

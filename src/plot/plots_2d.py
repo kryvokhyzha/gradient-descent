@@ -11,7 +11,7 @@ def cost_function_plot_2d(h, properties, weights_history):
     if h.weight.shape[0] != 2 and len(weights_history) > 2:
         return
 
-    _, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,6.15))
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(10,6.15))
 
     theta = [np.array([i[0][0], i[1][0]]) for i in weights_history]
 
@@ -37,7 +37,7 @@ def cost_function_plot_2d(h, properties, weights_history):
         ax.annotate('', xy=theta[j], xytext=theta[j-1],
                     arrowprops={'arrowstyle': '->', 'color': 'r', 'lw': 1},
                     va='center', ha='center', label='each GD step')
-
+    
     ax.set_xlabel(r'$w_0$')
     ax.set_ylabel(r'$w_1$')
     ax.set_title('Cost function contour plot')
@@ -107,9 +107,9 @@ def data_plot_2d(h, y_pred_history):
                     name='data'))
 
     tr = 0.1
-    for i, y_pred in enumerate(y_pred_history):
+    for i in range(len(y_pred_history)):
         if i % 25 == 0:
-            y_pred_history_temp = list(map(lambda x: x[0], y_pred))
+            y_pred_history_temp = list(map(lambda x: x[0], y_pred_history[i]))
             XY = list(zip(x, y_pred_history_temp))
             XY.sort(key=lambda x: x[0])
 
@@ -122,7 +122,7 @@ def data_plot_2d(h, y_pred_history):
 
             tr += 14 / len(y_pred_history)
     
-    y_pred_history_temp = list(map(lambda x: x[0], y_pred))
+    y_pred_history_temp = list(map(lambda x: x[0], y_pred_history[i]))
     XY = list(zip(x, y_pred_history_temp))
     XY.sort(key=lambda x: x[0])
 
@@ -175,7 +175,7 @@ def data_plot_clf_2d(h, y_pred_history):
 
     classes_ = [0, 1]
     colors = ['red', 'green']
-    for i, _ in zip(classes_, colors):
+    for i, color in zip(classes_, colors):
         idx, _ = np.where(h.y == i)
 
         fig.add_trace(go.Scatter(x=h.X_raw[idx, 1], y=h.X_raw[idx, 2],

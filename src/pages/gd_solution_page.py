@@ -1,13 +1,18 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import os
 import time
 
 from collections import namedtuple
 from sklearn.datasets import make_regression, make_classification
-from utils.constants import MODIFICATIONS, HYPOTHESES, COST_FUNCTIONS, REGULARIZATION, SCALE
+
+import matplotlib.pyplot as plt
+
+from utils.constants import *
 from db import db_insert
 from plot import plot_regression_all, plot_classification_all
+
 
 
 def show_side_bar():
@@ -53,16 +58,15 @@ def show_side_bar():
 
     Properties = namedtuple('Properties', ['modification', 'hypothesis', 'degree', 'cost_function',
                             'scaler', 'regularization', 'reg_coef', 'alpha', 'eps', 'max_num_itter'])
-
+    
     Choice = namedtuple('Choice', ['modification', 'hypothesis', 'cost_function',
                             'scaler', 'regularization'])
-                         
+
     return Properties(modification=MODIFICATIONS[modification], hypothesis=HYPOTHESES[hypothesis], degree=degree,
                       cost_function=COST_FUNCTIONS[cost_function], scaler=SCALE[scaler],
                       regularization=REGULARIZATION[regularization], reg_coef=reg_coef,
-                      eps=eps, alpha=alpha, max_num_itter=max_num_itter), \
-           Choice(modification=modification, hypothesis=hypothesis, cost_function=cost_function,
-                  scaler=scaler, regularization=regularization)
+                      eps=eps, alpha=alpha, max_num_itter=max_num_itter), Choice(modification=modification,
+                       hypothesis=hypothesis, cost_function=cost_function, scaler=scaler, regularization = regularization)
             
 
 

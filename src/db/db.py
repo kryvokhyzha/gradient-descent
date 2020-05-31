@@ -40,7 +40,7 @@ def db_clean():
     conn = sql.connect('db/user_history.db')
     cur = conn.cursor()
 
-    cur.executescript('''
+    cur.executescript(''' 
             DELETE FROM UserHistory;
             DELETE FROM AlgorithmParams;
     ''')
@@ -52,7 +52,7 @@ def db_clean():
 def db_insert(h, properties, excecution_time, choice):
     conn = sql.connect('db/user_history.db')
     cur = conn.cursor()
-
+    
     algorithm_param = (choice.hypothesis, choice.cost_function , choice.regularization , choice.scaler , properties.reg_coef, 
                properties.alpha, properties.eps, properties.max_num_itter , ', '.join(str(x) for x in h.weight))
 

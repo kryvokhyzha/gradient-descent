@@ -9,7 +9,7 @@ def comparison_page():
 
     with open('data/loss_history.npy', 'rb') as f:
         loss_h = np.load(f)
-
+    
     loss_plot_2d(loss_h)
 
     with open('data/execution_time.npy', 'rb') as f:
