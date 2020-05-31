@@ -1,0 +1,29 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+
+
+object UserHistory{
+  ~id:int
+  algorithm_name : varchar
+  execution_time: time 
+  ins_date: datetime
+  - param_id: int
+}
+
+object AlgorithmParams{
+    ~id: int
+    hypothesis: varchar
+    cost_function: varchar
+    regularization: varchar
+    scalling_function: varchar
+    reg_coef: double,
+    learning_rate: double
+    eps: double
+    max_num_itter: bigint
+    weights: varchar
+}
+
+UserHistory -down-> AlgorithmParams
+
+@enduml

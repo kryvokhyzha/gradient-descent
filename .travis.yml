@@ -1,0 +1,17 @@
+sudo: required
+
+services:
+    - docker
+
+dist: xenial
+
+language: python
+
+python:
+    - "3.7"
+
+script:
+    - echo "run test :)"
+
+after_success:
+    - test “$TRAVIS_BRANCH” = “master” && test "$TRAVIS_PULL_REQUEST" = "false" && sh .travis/deploy_heroku.sh
