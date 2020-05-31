@@ -34,12 +34,12 @@ def cost_function_plot_3d(h, properties, weights_history, loss_history):
     fig = go.Figure()
 
     fig.add_trace(
-        go.Surface(x=X, y=Y, z=J_grid, colorscale='RdBu', showscale=False))
+        go.Surface(x=X, y=Y, z=J_grid, showscale=False))
 
     fig.add_trace(go.Scatter3d(x=theta0[1:], y=theta1[1:], z=loss_history[1:], mode='lines+markers',
                     marker=dict(
                         size=3,
-                        color='green',
+                        color='red',
                         #color=y,                # set color to an array/list of desired values
                        # colorscale='greens',   # choose a colorscale
                         opacity=0.8
@@ -74,7 +74,7 @@ def data_plot_3d(h, y_pred_history):
     Z = np.array([h.hypothesis(X=np.vstack(([1]*l, xGrid[i], yGrid[i])).T).reshape(1, l)[0] for i in range(l)])
 
     fig.add_trace(
-        go.Surface(x=x[:, 0], y=x[:, 1], z=Z, colorscale='RdBu', showscale=False))
+        go.Surface(x=x[:, 0], y=x[:, 1], z=Z, showscale=False))
 
     fig.update_layout(title='Data 3D scatter plot and Approxomating curve', autosize=False,
                       width=900,
@@ -109,7 +109,12 @@ def data_plot_clf_3d(h, y_pred_history):
                     marker=dict(
                         size=3,
                         color=y,                # set color to an array/list of desired values
-                        colorscale='Viridis',   # choose a colorscale
+                        colorscale=[[0, "rgb(166,206,227)"],
+                                    [0.25, "rgb(31,120,180)"],
+                                    [0.45, "rgb(178,223,138)"],
+                                    [0.65, "rgb(51,160,44)"],
+                                    [0.85, "rgb(251,154,153)"],
+                                    [1, "rgb(227,26,28)"]],   # choose a colorscale
                         opacity=0.8
                     )))
     
@@ -118,7 +123,6 @@ def data_plot_clf_3d(h, y_pred_history):
             x=np.linspace(x_min, x_max, 201),
             y=np.linspace(y_min, y_max, 201),
             showscale = False,
-            colorscale='RdBu'
     ))
 
     fig.update_layout(title='Data scatter plot and Decision boundary', autosize=False,

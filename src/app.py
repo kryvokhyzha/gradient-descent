@@ -16,5 +16,5 @@ if __name__ == '__main__':
 
     st.sidebar.header("Please, choose page")
     page = st.sidebar.radio('', key='page_choice_radio', options=list(options.keys()))
-    
+
     options[page]()

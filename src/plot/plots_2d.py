@@ -136,7 +136,6 @@ def data_plot_2d(h, y_pred_history):
     fig.update_layout(title='Data scatter plot and Approxomating curve', autosize=False,
                       width=900,
                       height=600,
-                      yaxis=dict(range=[-5,25]),
                       xaxis_title='X',
                       yaxis_title='y')
 
